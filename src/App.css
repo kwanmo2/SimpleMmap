@@ -1,0 +1,300 @@
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1f2328;
+  --muted: #656d76;
+  --line: #d0d7de;
+  --accent: #2f6fde;
+  --root-fill: #2f6fde;
+  --root-text: #ffffff;
+  --main-fill: #e7efff;
+  --main-stroke: #93b2ee;
+  --sub-fill: #ffffff;
+  --sub-stroke: #c9d1da;
+  --edge: #8c99a8;
+  --error: #cf222e;
+  --flag-black: #1c2024;
+  color-scheme: light;
+  font-family: system-ui, 'Malgun Gothic', sans-serif;
+}
+/* data-theme은 index.html 인라인 스크립트와 src/ui/theme.ts가 설정한다 */
+:root[data-theme='dark'] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --fg: #e6edf3;
+  --muted: #8d96a0;
+  --line: #30363d;
+  --accent: #4c8dff;
+  --root-fill: #2f6fde;
+  --main-fill: #1b2a45;
+  --main-stroke: #3b5a92;
+  --sub-fill: #161b22;
+  --sub-stroke: #3a434e;
+  --edge: #5d6875;
+  --error: #ff7b72;
+  --flag-black: #aeb7c2;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  margin-right: 8px;
+}
+.toolbar button,
+.empty button {
+  font: inherit;
+  font-size: 13px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+}
+.toolbar button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.toolbar button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.sep {
+  width: 1px;
+  height: 20px;
+  background: var(--line);
+  margin: 0 4px;
+}
+.spacer {
+  flex: 1;
+}
+.file {
+  color: var(--muted);
+  font-size: 13px;
+}
+.dirty {
+  color: var(--accent);
+  margin-right: 4px;
+}
+
+.workspace {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.empty {
+  margin: auto;
+  text-align: center;
+  color: var(--muted);
+}
+
+.canvas {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.canvas svg {
+  display: block;
+}
+
+.edge {
+  fill: none;
+  stroke: var(--edge);
+  stroke-width: 1.5;
+}
+.edge-main {
+  stroke-width: 2.5;
+}
+
+.topic {
+  cursor: pointer;
+}
+.topic rect {
+  fill: var(--sub-fill);
+  stroke: var(--sub-stroke);
+  stroke-width: 1;
+}
+.topic-main rect {
+  fill: var(--main-fill);
+  stroke: var(--main-stroke);
+}
+.topic-root rect {
+  fill: var(--root-fill);
+  stroke: none;
+}
+.topic .label {
+  fill: var(--fg);
+}
+.topic-root .label {
+  fill: var(--root-text);
+}
+.topic.floating rect {
+  stroke-dasharray: 4 3;
+}
+.topic.selected rect {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+.topic-root.selected rect {
+  stroke: var(--fg);
+}
+.topic.drop-target rect {
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-dasharray: 6 3;
+}
+.topic.dimmed {
+  opacity: 0.35;
+}
+.toggle circle {
+  fill: var(--surface);
+  stroke: var(--edge);
+}
+.flag-pole {
+  stroke: var(--muted);
+}
+.toggle path {
+  stroke: var(--fg);
+  stroke-width: 1.5;
+}
+.drag-ghost {
+  pointer-events: none;
+  opacity: 0.85;
+}
+.drag-ghost rect {
+  fill: var(--surface);
+  stroke: var(--accent);
+}
+.drag-ghost text {
+  fill: var(--fg);
+  font-size: 13px;
+}
+
+/* 선택된 토픽 위에 항상 떠 있는 입력 상자: 평소에는 투명(키 입력·한글 IME 수신용), 편집 중에는 표시 */
+.edit-box {
+  position: absolute;
+  opacity: 0;
+  resize: none;
+  overflow: hidden;
+  border: none;
+  outline: none;
+  pointer-events: none;
+  background: transparent;
+  color: var(--fg);
+  line-height: 1.35;
+}
+.edit-box.editing {
+  opacity: 1;
+  pointer-events: auto;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
+  z-index: 1;
+}
+
+.inspector {
+  width: 300px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  padding: 12px;
+  background: var(--surface);
+  border-left: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 13px;
+}
+.inspector label,
+.inspector .field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--muted);
+}
+.inspector textarea,
+.inspector input {
+  font: inherit;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 8px;
+  resize: vertical;
+}
+.inspector small {
+  font-size: 11px;
+}
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
+}
+.icon-grid button {
+  font-size: 15px;
+  padding: 3px 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+}
+.icon-grid button:hover {
+  border-color: var(--line);
+}
+.icon-grid button.on {
+  border-color: var(--accent);
+  background: var(--main-fill);
+}
+.flag {
+  font-weight: bold;
+}
+
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+.keys {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 760px) {
+  .inspector {
+    display: none;
+  }
+}
